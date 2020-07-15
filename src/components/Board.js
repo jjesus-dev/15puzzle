@@ -4,8 +4,9 @@ import { Square } from "./Square";
 class Board extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+      numbers: this.props.shuffledNumbers,
     };
   }
 
@@ -17,18 +18,20 @@ class Board extends React.Component {
     const blankIndex = arrangedNumbers.indexOf(16);
 
     // Check the values in buttons
-    if (arrangedNumbers[index] !== 16) {
-      if (!this.checkForbidden(index, blankIndex)) {
-        //console.log(arrangedNumbers[index] + ": Can move.");
-        movedNumber = arrangedNumbers[index];
-        arrangedNumbers.splice(blankIndex, 1, movedNumber);
-        arrangedNumbers.splice(index, 1, 16);
+    if (
+      arrangedNumbers[index] !== 16 &&
+      !this.checkForbidden(index, blankIndex)
+    ) {
+      //console.log(arrangedNumbers[index] + ": Can move.");
+      movedNumber = arrangedNumbers[index];
+      arrangedNumbers.splice(blankIndex, 1, movedNumber);
+      arrangedNumbers.splice(index, 1, 16);
 
-        this.setState({
-          numbers: arrangedNumbers,
-        });
-      }
-    } /* else {
+      this.setState({
+        numbers: arrangedNumbers,
+      });
+    }
+    /* else {
       console.log("Can't move the same number.");
     }*/
   };
@@ -58,15 +61,42 @@ class Board extends React.Component {
   }
 
   render() {
-    const title = "Arrange the numbers";
     const newNumbers = this.state.numbers;
 
     return (
-      <div>
-        <div>{title}</div>
-        <Square numbers={newNumbers} changeNumber={this.changeNumber} />
+      <div className="container">
+        <div>
+          <p>
+            {" "}
+            Tips:
+            <ul>
+              <li>Click one number to move it one cell</li>
+              <li>Sort from 1 to 15</li>
+              <li>Press F5 to reset</li>
+            </ul>
+          </p>
+          <SolutionMessage
+            solution={this.props.solution}
+            numbers={this.state.numbers}
+          />
+        </div>
+
+        <div>
+          <Square numbers={newNumbers} changeNumber={this.changeNumber} />
+        </div>
       </div>
     );
+  }
+}
+
+function SolutionMessage(props) {
+  if (
+    props.solution.lenght === props.numbers.lenght &&
+    props.solution.every((value, index) => value === props.numbers[index])
+  ) {
+    return <p className="solved">Congratulations!</p>;
+  } else {
+    return <p className="unsolved">Keep it going...</p>;
   }
 }
 

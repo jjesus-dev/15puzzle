@@ -5,15 +5,19 @@ class Square extends React.Component {
     const cells = props.numbers.map((cell, index) => {
       return (
         <li key={index}>
-          {/*[{index}]&gt;*/}
-          <button className="number" onClick={() => props.changeNumber(index)}>
+          <button
+            className={`cell-number ${
+              cell === 16 ? "hidden-number" : "visible-number"
+            }`}
+            onClick={() => props.changeNumber(index)}
+          >
             {cell}
           </button>
         </li>
       );
     });
 
-    return <ul className="list-row">{cells}</ul>;
+    return <ul className="grid">{cells}</ul>;
   }
 
   render() {
